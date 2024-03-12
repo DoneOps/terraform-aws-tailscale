@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.5 (2024-03-12)
+
+## What's Changed
+* fix: use metadata by @jmymy in https://github.com/DoneOps/terraform-aws-tailscale/pull/13
+
+
+**Full Changelog**: https://github.com/DoneOps/terraform-aws-tailscale/compare/v0.1.4...v0.1.5
+
 ## 0.1.4 (2024-03-12)
 
 ## What's Changed
