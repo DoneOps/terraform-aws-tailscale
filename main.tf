@@ -20,14 +20,13 @@ data "aws_ami" "amazon2" {
 }
 
 resource "aws_instance" "bastion_host_ec2" {
+  depends_on = [tailscale_tailnet_key.bastion_key.key]
   ami                         = data.aws_ami.amazon2.id
   instance_type               = "t4g.micro"
   associate_public_ip_address = false
-  # key_name                    = aws_key_pair.bastion.key_name
   subnet_id                   = var.subnet_id
   user_data_replace_on_change = true
   source_dest_check           = false
-  # iam_instance_profile        = aws_iam_instance_profile.bastion_ec2_instance_profile.id
 
   vpc_security_group_ids = [aws_security_group.allow_bastion_ssh_sg.id]
 
@@ -66,15 +65,6 @@ resource "aws_security_group" "allow_bastion_ssh_sg" {
   description = "Allow ssh to the bastion host"
   vpc_id      = var.vpc_id
 
-  # ingress {
-  #   description      = "SSH from IPs"
-  #   from_port        = 22
-  #   to_port          = 22
-  #   protocol         = "tcp"
-  #   cidr_blocks      = var.bastion_ip_allowlist_ipv4
-  #   ipv6_cidr_blocks = var.bastion_ip_allowlist_ipv6
-  # }
-
   egress {
     from_port        = 0
     to_port          = 0
@@ -96,7 +86,6 @@ module "ebs_kms_key" {
   enable_default_policy = true
   key_owners            = [data.aws_iam_session_context.current.issuer_arn]
 
-  # Aliases
   aliases = ["bastion/${var.name}/ebs"]
 
   tags = {
@@ -110,6 +99,7 @@ resource "tailscale_tailnet_key" "bastion_key" {
   preauthorized = true
   expiry        = 7776000
   description   = "bastion-${var.name}"
+  tags = var.tailscale_tags
   # lifecycle {
   #   replace_triggered_by = [
   #     data.aws_ami.amazon2.id
