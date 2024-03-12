@@ -23,7 +23,7 @@ resource "aws_instance" "bastion_host_ec2" {
   depends_on = [tailscale_tailnet_key.bastion_key]
   ami                         = data.aws_ami.amazon2.id
   instance_type               = "t4g.micro"
-  associate_public_ip_address = false
+  associate_public_ip_address = true
   subnet_id                   = var.subnet_id
   user_data_replace_on_change = true
   source_dest_check           = false
@@ -50,7 +50,7 @@ resource "aws_instance" "bastion_host_ec2" {
   }
   metadata_options {
     http_tokens                 = "required"
-    http_endpoint               = "disabled"
+    http_endpoint               = "enabled"
     http_put_response_hop_limit = 1
     instance_metadata_tags      = "disabled"
   }
