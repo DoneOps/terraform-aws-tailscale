@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.3 (2024-03-12)
+
+## What's Changed
+* fix: correct bad depends_on by @jmymy in https://github.com/DoneOps/terraform-aws-tailscale/pull/9
+
+
+**Full Changelog**: https://github.com/DoneOps/terraform-aws-tailscale/compare/v0.1.2...v0.1.3
+
 ## 0.1.2 (2024-03-12)
 
 ## What's Changed
