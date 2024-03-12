@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.1 (2024-03-12)
+
+## What's Changed
+* fix: ignore lifecycle rule for now by @jmymy in https://github.com/DoneOps/terraform-aws-tailscale/pull/5
+
+
+**Full Changelog**: https://github.com/DoneOps/terraform-aws-tailscale/compare/v0.1.0...v0.1.1
+
 ## 0.1.0 (2024-03-12)
 
 ## What's Changed
