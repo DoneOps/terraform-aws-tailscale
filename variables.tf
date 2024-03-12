@@ -34,5 +34,10 @@ variable "accept_dns" {
 variable "tailscale_tags" {
   type        = list(string)
   description = "List of tags to apply to the Tailscale node"
-  default     = ["bastion"]
+  default     = ["tag:bastion"]
+
+  validation {
+    condition     = alltrue([for tag in var.tailscale_tags : can(regex("^tag:", tag))])
+    error_message = "All items in the tailscale_tags list must be prefixed with 'tag:'."
+  }
 }
