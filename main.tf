@@ -110,9 +110,9 @@ resource "tailscale_tailnet_key" "bastion_key" {
   preauthorized = true
   expiry        = 7776000
   description   = "bastion-${var.name}"
-  lifecycle {
-    replace_triggered_by = [
-      data.aws_ami.amazon2.id
-    ]
-  }
+  # lifecycle {
+  #   replace_triggered_by = [
+  #     data.aws_ami.amazon2.id
+  #   ]
+  # }
 }
