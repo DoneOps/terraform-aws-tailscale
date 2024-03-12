@@ -1,6 +1,20 @@
 # terraform-aws-tailscale
 terraform module for a tailscle host
 
+Configure your tailscal provider with the following env vars:
+```
+TAILSCALE_OAUTH_CLIENT_ID
+TAILSCALE_OAUTH_CLIENT_SECRET
+```
+add the following to your provider block:
+```hcl
+provider "tailscale" {}
+```
+Ensure the tags passed in to input_tags are valid for the oauth client you created.
+
+This module is currently only tested to run in a public subnet.
+
+
 <!-- BEGIN_TF_DOCS -->
 ## Requirements
 
