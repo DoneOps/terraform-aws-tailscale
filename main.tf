@@ -20,7 +20,7 @@ data "aws_ami" "amazon2" {
 }
 
 resource "aws_instance" "bastion_host_ec2" {
-  depends_on = [tailscale_tailnet_key.bastion_key.key]
+  depends_on = [tailscale_tailnet_key.bastion_key]
   ami                         = data.aws_ami.amazon2.id
   instance_type               = "t4g.micro"
   associate_public_ip_address = false
