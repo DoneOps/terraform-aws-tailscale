@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.4 (2024-03-12)
+
+## What's Changed
+* fix: add tag validation by @jmymy in https://github.com/DoneOps/terraform-aws-tailscale/pull/11
+
+
+**Full Changelog**: https://github.com/DoneOps/terraform-aws-tailscale/compare/v0.1.3...v0.1.4
+
 ## 0.1.3 (2024-03-12)
 
 ## What's Changed
