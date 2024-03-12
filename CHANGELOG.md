@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.6 (2024-03-12)
+
+## What's Changed
+* chore: doc update by @jmymy in https://github.com/DoneOps/terraform-aws-tailscale/pull/15
+
+
+**Full Changelog**: https://github.com/DoneOps/terraform-aws-tailscale/compare/v0.1.5...v0.1.6
+
 ## 0.1.5 (2024-03-12)
 
 ## What's Changed
