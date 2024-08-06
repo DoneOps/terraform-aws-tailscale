@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.1.7 (2024-08-06)
+
+## What's Changed
+* ci(deps): update terraform tailscale to v0.16.0 by @renovate in https://github.com/DoneOps/terraform-aws-tailscale/pull/17
+* ci(deps): update terraform tailscale to v0.16.1 by @renovate in https://github.com/DoneOps/terraform-aws-tailscale/pull/19
+* ci(deps): update terraform terraform-aws-modules/kms/aws to v3 by @renovate in https://github.com/DoneOps/terraform-aws-tailscale/pull/20
+* ci(deps): update terraform terraform-aws-modules/kms/aws to v3.1.0 by @renovate in https://github.com/DoneOps/terraform-aws-tailscale/pull/21
+* ci(deps): update terraform tailscale to v0.16.2 by @renovate in https://github.com/DoneOps/terraform-aws-tailscale/pull/22
+
+## New Contributors
+* @renovate made their first contribution in https://github.com/DoneOps/terraform-aws-tailscale/pull/17
+
+**Full Changelog**: https://github.com/DoneOps/terraform-aws-tailscale/compare/v0.1.6...v0.1.7
+
 ## 0.1.6 (2024-03-12)
 
 ## What's Changed
