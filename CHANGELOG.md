@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.8 (2024-09-23)
+
+## What's Changed
+* ci(deps): update terraform tailscale to v0.17.1 by @renovate in https://github.com/DoneOps/terraform-aws-tailscale/pull/23
+
+
+**Full Changelog**: https://github.com/DoneOps/terraform-aws-tailscale/compare/v0.1.7...v0.1.8
+
 ## 0.1.7 (2024-08-06)
 
 ## What's Changed
