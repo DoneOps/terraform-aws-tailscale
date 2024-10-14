@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.1.9 (2024-10-14)
+
+## What's Changed
+* ci(deps): update terraform terraform-aws-modules/kms/aws to v3.1.1 by @renovate in https://github.com/DoneOps/terraform-aws-tailscale/pull/26
+* ci(deps): update terraform tailscale to v0.17.2 by @renovate in https://github.com/DoneOps/terraform-aws-tailscale/pull/25
+
+
+**Full Changelog**: https://github.com/DoneOps/terraform-aws-tailscale/compare/v0.1.8...v0.1.9
+
 ## 0.1.8 (2024-09-23)
 
 ## What's Changed
