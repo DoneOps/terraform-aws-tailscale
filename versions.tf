@@ -8,7 +8,7 @@ terraform {
     }
     tailscale = {
       source  = "tailscale/tailscale"
-      version = "0.17.2"
+      version = "0.18.0"
     }
   }
 }
