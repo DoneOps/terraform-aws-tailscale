@@ -53,3 +53,15 @@ variable "tailscale_tags" {
     error_message = "All items in the tailscale_tags list must be prefixed with 'tag:'."
   }
 }
+
+variable "security_group_id" {
+  type        = string
+  description = "Optional existing security group ID. If provided, skips SG creation."
+  default     = null
+}
+
+variable "security_group_name" {
+  type        = string
+  description = "Name for the security group. Defaults to 'tailscale-{name}'."
+  default     = null
+}

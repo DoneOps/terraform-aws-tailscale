@@ -1,3 +1,8 @@
+locals {
+  security_group_name         = var.security_group_name != null ? var.security_group_name : "tailscale-${var.name}"
+  effective_security_group_id = var.security_group_id != null ? var.security_group_id : aws_security_group.allow_bastion_ssh_sg[0].id
+}
+
 data "aws_ami" "amazon2" {
   most_recent = true
 
@@ -28,7 +33,7 @@ resource "aws_instance" "bastion_host_ec2" {
   user_data_replace_on_change = true
   source_dest_check           = false
 
-  vpc_security_group_ids = [aws_security_group.allow_bastion_ssh_sg.id]
+  vpc_security_group_ids = [local.effective_security_group_id]
 
   user_data = templatefile(
     "${path.module}/cloud-init-userdata.tpl",
@@ -62,8 +67,9 @@ resource "aws_instance" "bastion_host_ec2" {
 # Note: Named for historical reasons. Ingress is handled via Tailscale tunnel,
 # so no inbound rules are needed. This SG only allows outbound traffic.
 resource "aws_security_group" "allow_bastion_ssh_sg" {
-  name        = "allow_bastion_ssh_${var.name}"
-  description = "Security group for Tailscale bastion - egress only"
+  count       = var.security_group_id == null ? 1 : 0
+  name        = local.security_group_name
+  description = "Security group for Tailscale instance - egress only"
   vpc_id      = var.vpc_id
 
   egress {
@@ -74,9 +80,9 @@ resource "aws_security_group" "allow_bastion_ssh_sg" {
     ipv6_cidr_blocks = ["::/0"]
   }
 
-  tags = {
-    Name = "allow_bastion_ssh_${var.name}"
-  }
+  tags = merge(var.tags, {
+    Name = local.security_group_name
+  })
 }
 
 module "ebs_kms_key" {
