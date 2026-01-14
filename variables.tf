@@ -5,7 +5,7 @@ variable "vpc_id" {
 
 variable "subnet_id" {
   type        = string
-  description = "Subnet in which to dpeloy the ec2 instance"
+  description = "Subnet in which to deploy the EC2 instance"
 }
 
 variable "tags" {

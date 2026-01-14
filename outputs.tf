@@ -4,5 +4,6 @@ output "incoming_security_group_id" {
 }
 
 output "instance_id" {
-  value = aws_instance.bastion_host_ec2.id
+  description = "EC2 instance ID of the bastion host"
+  value       = aws_instance.bastion_host_ec2.id
 }

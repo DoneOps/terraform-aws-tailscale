@@ -20,7 +20,7 @@ data "aws_ami" "amazon2" {
 }
 
 resource "aws_instance" "bastion_host_ec2" {
-  depends_on = [tailscale_tailnet_key.bastion_key]
+  depends_on                  = [tailscale_tailnet_key.bastion_key]
   ami                         = data.aws_ami.amazon2.id
   instance_type               = "t4g.micro"
   associate_public_ip_address = true
@@ -39,9 +39,7 @@ resource "aws_instance" "bastion_host_ec2" {
       accept_dns        = var.accept_dns
     }
   )
-  credit_specification {
-    cpu_credits = "unlimited"
-  }
+
   root_block_device {
     volume_size = 8
     volume_type = "gp3"
@@ -60,9 +58,11 @@ resource "aws_instance" "bastion_host_ec2" {
   }
 }
 
+# Note: Named for historical reasons. Ingress is handled via Tailscale tunnel,
+# so no inbound rules are needed. This SG only allows outbound traffic.
 resource "aws_security_group" "allow_bastion_ssh_sg" {
   name        = "allow_bastion_ssh_${var.name}"
-  description = "Allow ssh to the bastion host"
+  description = "Security group for Tailscale bastion - egress only"
   vpc_id      = var.vpc_id
 
   egress {
@@ -80,7 +80,7 @@ resource "aws_security_group" "allow_bastion_ssh_sg" {
 
 module "ebs_kms_key" {
   source  = "terraform-aws-modules/kms/aws"
-  version = "4.1.0"
+  version = "4.2.0"
 
   description           = "key to encrypt bastion ebs volumes"
   enable_default_policy = true
@@ -99,10 +99,5 @@ resource "tailscale_tailnet_key" "bastion_key" {
   preauthorized = true
   expiry        = 7776000
   description   = "bastion-${var.name}"
-  tags = var.tailscale_tags
-  # lifecycle {
-  #   replace_triggered_by = [
-  #     data.aws_ami.amazon2.id
-  #   ]
-  # }
+  tags          = var.tailscale_tags
 }

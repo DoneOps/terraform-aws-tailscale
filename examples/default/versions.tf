@@ -2,12 +2,12 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 4.67.0"
+      version = ">= 5.20"
     }
     tailscale = {
       source  = "tailscale/tailscale"
-      version = "0.15.0"
+      version = "0.25.0"
     }
   }
-  required_version = "1.5.7"
+  required_version = ">= 1.5.6"
 }
