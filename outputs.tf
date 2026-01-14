@@ -1,6 +1,6 @@
 output "incoming_security_group_id" {
-  description = "Security group ID for bastion sg"
-  value       = aws_security_group.allow_bastion_ssh_sg.id
+  description = "Security group ID used by the Tailscale instance"
+  value       = local.effective_security_group_id
 }
 
 output "instance_id" {
