@@ -37,6 +37,7 @@ resource "aws_instance" "bastion_host_ec2" {
       advertised_routes = join(",", var.advertised_routes)
       hostname          = "bastion-${var.name}"
       accept_dns        = var.accept_dns
+      mode              = var.mode
     }
   )
 

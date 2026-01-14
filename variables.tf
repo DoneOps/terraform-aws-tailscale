@@ -19,9 +19,21 @@ variable "name" {
   description = "Stack name to use in resource creation"
 }
 
+variable "mode" {
+  description = "Tailscale mode: 'subnet-router' or 'app-connector'"
+  type        = string
+  default     = "subnet-router"
+
+  validation {
+    condition     = contains(["subnet-router", "app-connector"], var.mode)
+    error_message = "Mode must be 'subnet-router' or 'app-connector'."
+  }
+}
+
 variable "advertised_routes" {
   type        = list(string)
-  description = "List of advertised routes for the bastion host"
+  description = "List of advertised routes for the bastion host (only used in subnet-router mode)"
+  default     = []
 }
 
 variable "accept_dns" {
