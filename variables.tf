@@ -54,6 +54,12 @@ variable "tailscale_tags" {
   }
 }
 
+variable "instance_type" {
+  type        = string
+  description = "EC2 instance type for the Tailscale node"
+  default     = "t4g.micro"
+}
+
 variable "security_group_id" {
   type        = string
   description = "Optional existing security group ID. If provided, skips SG creation."

@@ -27,7 +27,7 @@ data "aws_ami" "amazon2023" {
 resource "aws_instance" "bastion_host_ec2" {
   depends_on                  = [tailscale_tailnet_key.bastion_key]
   ami                         = data.aws_ami.amazon2023.id
-  instance_type               = "t4g.micro"
+  instance_type               = var.instance_type
   associate_public_ip_address = true
   subnet_id                   = var.subnet_id
   user_data_replace_on_change = true
@@ -59,9 +59,9 @@ resource "aws_instance" "bastion_host_ec2" {
     instance_metadata_tags      = "disabled"
   }
 
-  tags = {
+  tags = merge(var.tags, {
     Name = "bastion-${var.name}"
-  }
+  })
 }
 
 # Note: Named for historical reasons. Ingress is handled via Tailscale tunnel,
@@ -95,9 +95,9 @@ module "ebs_kms_key" {
 
   aliases = ["bastion/${var.name}/ebs"]
 
-  tags = {
+  tags = merge(var.tags, {
     Name = "bastion-${var.name}"
-  }
+  })
 }
 
 resource "tailscale_tailnet_key" "bastion_key" {
