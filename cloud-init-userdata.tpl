@@ -5,8 +5,8 @@ yum_repos:
     enabled: true
     repo_gpgcheck: true
     gpgcheck: false
-    baseurl: https://pkgs.tailscale.com/stable/amazon-linux/2/$basearch
-    gpgkey: https://pkgs.tailscale.com/stable/amazon-linux/2/repo.gpg
+    baseurl: https://pkgs.tailscale.com/stable/amazon-linux/2023/$basearch
+    gpgkey: https://pkgs.tailscale.com/stable/amazon-linux/2023/repo.gpg
 
 packages:
   - tailscale

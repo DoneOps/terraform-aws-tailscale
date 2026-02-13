@@ -3,12 +3,12 @@ locals {
   effective_security_group_id = var.security_group_id != null ? var.security_group_id : aws_security_group.allow_bastion_ssh_sg[0].id
 }
 
-data "aws_ami" "amazon2" {
+data "aws_ami" "amazon2023" {
   most_recent = true
 
   filter {
     name   = "name"
-    values = ["amzn2-ami-hvm-2*-gp2"]
+    values = ["al2023-ami-2*"]
   }
 
   filter {
@@ -26,7 +26,7 @@ data "aws_ami" "amazon2" {
 
 resource "aws_instance" "bastion_host_ec2" {
   depends_on                  = [tailscale_tailnet_key.bastion_key]
-  ami                         = data.aws_ami.amazon2.id
+  ami                         = data.aws_ami.amazon2023.id
   instance_type               = "t4g.micro"
   associate_public_ip_address = true
   subnet_id                   = var.subnet_id
