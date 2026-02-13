@@ -19,8 +19,8 @@ write_files:
 runcmd:
   - sysctl --system
   - systemctl enable --now tailscaled
-%{ if mode == "app-connector" ~}
+%{ if mode == "app-connector" }
   - tailscale up --authkey "${auth_key}" --advertise-connector --hostname "${hostname}" --accept-dns="${accept_dns}"
-%{ else ~}
+%{ else }
   - tailscale up --authkey "${auth_key}" --advertise-routes "${advertised_routes}" --hostname "${hostname}" --accept-dns="${accept_dns}"
-%{ endif ~}
+%{ endif }
