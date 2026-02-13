@@ -193,11 +193,12 @@ After deploying in app-connector mode, configure your Tailscale ACL policy:
 |------|-------------|------|---------|:--------:|
 | <a name="input_accept_dns"></a> [accept\_dns](#input\_accept\_dns) | For EC2 instances it is generally best to let Amazon handle the DNS configuration, not have Tailscale override it | `bool` | `false` | no |
 | <a name="input_advertised_routes"></a> [advertised\_routes](#input\_advertised\_routes) | List of advertised routes for the bastion host (required for subnet-router mode) | `list(string)` | `[]` | no |
+| <a name="input_create_security_group"></a> [create\_security\_group](#input\_create\_security\_group) | Whether to create a security group. Set to false and provide security\_group\_id to use an existing one. | `bool` | `true` | no |
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | EC2 instance type for the Tailscale node. Must be ARM64/Graviton (e.g., t4g, m6g, c6g) since the module uses an arm64 AMI. | `string` | `"t4g.micro"` | no |
 | <a name="input_mode"></a> [mode](#input\_mode) | Tailscale mode: 'subnet-router' or 'app-connector' | `string` | `"subnet-router"` | no |
 | <a name="input_name"></a> [name](#input\_name) | Stack name to use in resource creation | `string` | n/a | yes |
-| <a name="input_security_group_id"></a> [security\_group\_id](#input\_security\_group\_id) | Optional existing security group ID. If provided, skips SG creation. | `string` | `null` | no |
-| <a name="input_security_group_name"></a> [security\_group\_name](#input\_security\_group\_name) | Name for the created security group. Ignored when security\_group\_id is provided. Defaults to 'tailscale-{name}'. | `string` | `null` | no |
+| <a name="input_security_group_id"></a> [security\_group\_id](#input\_security\_group\_id) | Existing security group ID to use. Required when create\_security\_group is false. | `string` | `null` | no |
+| <a name="input_security_group_name"></a> [security\_group\_name](#input\_security\_group\_name) | Name for the created security group. Only used when create\_security\_group is true. Defaults to 'tailscale-{name}'. | `string` | `null` | no |
 | <a name="input_subnet_id"></a> [subnet\_id](#input\_subnet\_id) | Subnet in which to deploy the EC2 instance | `string` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | A map of tags to add to all resources | `map(string)` | `{}` | no |
 | <a name="input_tailscale_tags"></a> [tailscale\_tags](#input\_tailscale\_tags) | List of tags to apply to the Tailscale node | `list(string)` | <pre>[<br/>  "tag:bastion"<br/>]</pre> | no |

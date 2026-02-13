@@ -1,6 +1,6 @@
 locals {
   security_group_name         = var.security_group_name != null ? var.security_group_name : "tailscale-${var.name}"
-  effective_security_group_id = var.security_group_id != null ? var.security_group_id : aws_security_group.allow_bastion_ssh_sg[0].id
+  effective_security_group_id = var.create_security_group ? aws_security_group.allow_bastion_ssh_sg[0].id : var.security_group_id
 }
 
 data "aws_ami" "amazon2023" {
@@ -78,7 +78,7 @@ resource "aws_instance" "bastion_host_ec2" {
 # Note: Named for historical reasons. Ingress is handled via Tailscale tunnel,
 # so no inbound rules are needed. This SG only allows outbound traffic.
 resource "aws_security_group" "allow_bastion_ssh_sg" {
-  count       = var.security_group_id == null ? 1 : 0
+  count       = var.create_security_group ? 1 : 0
   name        = local.security_group_name
   description = "Security group for Tailscale instance - egress only"
   vpc_id      = var.vpc_id

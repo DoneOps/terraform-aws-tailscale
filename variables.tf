@@ -65,9 +65,15 @@ variable "instance_type" {
   default     = "t4g.micro"
 }
 
+variable "create_security_group" {
+  type        = bool
+  description = "Whether to create a security group. Set to false and provide security_group_id to use an existing one."
+  default     = true
+}
+
 variable "security_group_id" {
   type        = string
-  description = "Optional existing security group ID. If provided, skips SG creation."
+  description = "Existing security group ID to use. Required when create_security_group is false."
   default     = null
 
   validation {
@@ -78,6 +84,6 @@ variable "security_group_id" {
 
 variable "security_group_name" {
   type        = string
-  description = "Name for the created security group. Ignored when security_group_id is provided. Defaults to 'tailscale-{name}'."
+  description = "Name for the created security group. Only used when create_security_group is true. Defaults to 'tailscale-{name}'."
   default     = null
 }
