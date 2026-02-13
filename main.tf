@@ -59,6 +59,17 @@ resource "aws_instance" "bastion_host_ec2" {
     instance_metadata_tags      = "disabled"
   }
 
+  lifecycle {
+    precondition {
+      condition     = var.mode == "app-connector" || length(var.advertised_routes) > 0
+      error_message = "advertised_routes must contain at least one CIDR when mode is 'subnet-router'."
+    }
+    precondition {
+      condition     = var.mode != "app-connector" || length(var.advertised_routes) == 0
+      error_message = "advertised_routes must not be set when mode is 'app-connector'. App connector routes are configured via Tailscale ACL policy."
+    }
+  }
+
   tags = merge(var.tags, {
     Name = "bastion-${var.name}"
   })
@@ -89,7 +100,7 @@ module "ebs_kms_key" {
   source  = "terraform-aws-modules/kms/aws"
   version = "4.2.0"
 
-  description           = "key to encrypt bastion ebs volumes"
+  description           = "KMS key to encrypt bastion EBS volumes"
   enable_default_policy = true
   key_owners            = [data.aws_iam_session_context.current.issuer_arn]
 
@@ -104,7 +115,7 @@ resource "tailscale_tailnet_key" "bastion_key" {
   reusable      = true
   ephemeral     = false
   preauthorized = true
-  expiry        = 7776000
+  expiry        = 7776000 # 90 days in seconds
   description   = "bastion-${var.name}"
   tags          = var.tailscale_tags
 }
