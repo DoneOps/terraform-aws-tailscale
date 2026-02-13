@@ -68,6 +68,10 @@ resource "aws_instance" "bastion_host_ec2" {
       condition     = var.mode != "app-connector" || length(var.advertised_routes) == 0
       error_message = "advertised_routes must not be set when mode is 'app-connector'. App connector routes are configured via Tailscale ACL policy."
     }
+    precondition {
+      condition     = var.create_security_group || var.security_group_id != null
+      error_message = "security_group_id is required when create_security_group is false."
+    }
   }
 
   tags = merge(var.tags, {
