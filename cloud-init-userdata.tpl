@@ -5,8 +5,8 @@ yum_repos:
     enabled: true
     repo_gpgcheck: true
     gpgcheck: false
-    baseurl: https://pkgs.tailscale.com/stable/amazon-linux/2/$basearch
-    gpgkey: https://pkgs.tailscale.com/stable/amazon-linux/2/repo.gpg
+    baseurl: https://pkgs.tailscale.com/stable/amazon-linux/2023/$basearch
+    gpgkey: https://pkgs.tailscale.com/stable/amazon-linux/2023/repo.gpg
 
 packages:
   - tailscale
@@ -19,9 +19,8 @@ write_files:
 runcmd:
   - sysctl --system
   - systemctl enable --now tailscaled
-  - |
-    tailscale up \
-      --authkey "${auth_key}" \
-      --advertise-routes "${advertised_routes}" \
-      --hostname "${hostname}" \
-      --accept-dns="${accept_dns}"
+%{ if mode == "app-connector" }
+  - tailscale up --authkey "${auth_key}" --advertise-connector --hostname "${hostname}" --accept-dns="${accept_dns}"
+%{ else }
+  - tailscale up --authkey "${auth_key}" --advertise-routes "${advertised_routes}" --hostname "${hostname}" --accept-dns="${accept_dns}"
+%{ endif }

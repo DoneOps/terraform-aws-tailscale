@@ -5,7 +5,7 @@ variable "vpc_id" {
 
 variable "subnet_id" {
   type        = string
-  description = "Subnet in which to dpeloy the ec2 instance"
+  description = "Subnet in which to deploy the EC2 instance"
 }
 
 variable "tags" {
@@ -19,9 +19,26 @@ variable "name" {
   description = "Stack name to use in resource creation"
 }
 
+variable "mode" {
+  description = "Tailscale mode: 'subnet-router' or 'app-connector'"
+  type        = string
+  default     = "subnet-router"
+
+  validation {
+    condition     = contains(["subnet-router", "app-connector"], var.mode)
+    error_message = "Mode must be 'subnet-router' or 'app-connector'."
+  }
+}
+
 variable "advertised_routes" {
   type        = list(string)
-  description = "List of advertised routes for the bastion host"
+  description = "List of advertised routes for the bastion host (required for subnet-router mode)"
+  default     = []
+
+  validation {
+    condition     = alltrue([for route in var.advertised_routes : can(cidrhost(route, 0))])
+    error_message = "All items in advertised_routes must be valid CIDR blocks (e.g., '10.0.0.0/16')."
+  }
 }
 
 variable "accept_dns" {
@@ -37,7 +54,36 @@ variable "tailscale_tags" {
   default     = ["tag:bastion"]
 
   validation {
-    condition     = alltrue([for tag in var.tailscale_tags : can(regex("^tag:", tag))])
-    error_message = "All items in the tailscale_tags list must be prefixed with 'tag:'."
+    condition     = length(var.tailscale_tags) > 0 && alltrue([for tag in var.tailscale_tags : can(regex("^tag:", tag))])
+    error_message = "tailscale_tags must contain at least one tag, and all items must be prefixed with 'tag:'."
   }
+}
+
+variable "instance_type" {
+  type        = string
+  description = "EC2 instance type for the Tailscale node. Must be ARM64/Graviton (e.g., t4g, m6g, c6g) since the module uses an arm64 AMI."
+  default     = "t4g.micro"
+}
+
+variable "create_security_group" {
+  type        = bool
+  description = "Whether to create a security group. Set to false and provide security_group_id to use an existing one."
+  default     = true
+}
+
+variable "security_group_id" {
+  type        = string
+  description = "Existing security group ID to use. Required when create_security_group is false."
+  default     = null
+
+  validation {
+    condition     = var.security_group_id == null || can(regex("^sg-[a-f0-9]{8,17}$", var.security_group_id))
+    error_message = "security_group_id must be a valid AWS security group ID (e.g., sg-0123456789abcdef0) or null."
+  }
+}
+
+variable "security_group_name" {
+  type        = string
+  description = "Name for the created security group. Only used when create_security_group is true. Defaults to 'tailscale-{name}'."
+  default     = null
 }

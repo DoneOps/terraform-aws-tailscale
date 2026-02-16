@@ -1,9 +1,14 @@
-data "aws_ami" "amazon2" {
+locals {
+  security_group_name         = var.security_group_name != null ? var.security_group_name : "tailscale-${var.name}"
+  effective_security_group_id = var.create_security_group ? aws_security_group.allow_bastion_ssh_sg[0].id : var.security_group_id
+}
+
+data "aws_ami" "amazon2023" {
   most_recent = true
 
   filter {
     name   = "name"
-    values = ["amzn2-ami-hvm-2*-gp2"]
+    values = ["al2023-ami-2*"]
   }
 
   filter {
@@ -20,15 +25,15 @@ data "aws_ami" "amazon2" {
 }
 
 resource "aws_instance" "bastion_host_ec2" {
-  depends_on = [tailscale_tailnet_key.bastion_key]
-  ami                         = data.aws_ami.amazon2.id
-  instance_type               = "t4g.micro"
+  depends_on                  = [tailscale_tailnet_key.bastion_key]
+  ami                         = data.aws_ami.amazon2023.id
+  instance_type               = var.instance_type
   associate_public_ip_address = true
   subnet_id                   = var.subnet_id
   user_data_replace_on_change = true
   source_dest_check           = false
 
-  vpc_security_group_ids = [aws_security_group.allow_bastion_ssh_sg.id]
+  vpc_security_group_ids = [local.effective_security_group_id]
 
   user_data = templatefile(
     "${path.module}/cloud-init-userdata.tpl",
@@ -37,11 +42,10 @@ resource "aws_instance" "bastion_host_ec2" {
       advertised_routes = join(",", var.advertised_routes)
       hostname          = "bastion-${var.name}"
       accept_dns        = var.accept_dns
+      mode              = var.mode
     }
   )
-  credit_specification {
-    cpu_credits = "unlimited"
-  }
+
   root_block_device {
     volume_size = 8
     volume_type = "gp3"
@@ -55,14 +59,32 @@ resource "aws_instance" "bastion_host_ec2" {
     instance_metadata_tags      = "disabled"
   }
 
-  tags = {
-    Name = "bastion-${var.name}"
+  lifecycle {
+    precondition {
+      condition     = var.mode == "app-connector" || length(var.advertised_routes) > 0
+      error_message = "advertised_routes must contain at least one CIDR when mode is 'subnet-router'."
+    }
+    precondition {
+      condition     = var.mode != "app-connector" || length(var.advertised_routes) == 0
+      error_message = "advertised_routes must not be set when mode is 'app-connector'. App connector routes are configured via Tailscale ACL policy."
+    }
+    precondition {
+      condition     = var.create_security_group || var.security_group_id != null
+      error_message = "security_group_id is required when create_security_group is false."
+    }
   }
+
+  tags = merge(var.tags, {
+    Name = "bastion-${var.name}"
+  })
 }
 
+# Note: Named for historical reasons. Ingress is handled via Tailscale tunnel,
+# so no inbound rules are needed. This SG only allows outbound traffic.
 resource "aws_security_group" "allow_bastion_ssh_sg" {
-  name        = "allow_bastion_ssh_${var.name}"
-  description = "Allow ssh to the bastion host"
+  count       = var.create_security_group ? 1 : 0
+  name        = local.security_group_name
+  description = "Security group for Tailscale instance - egress only"
   vpc_id      = var.vpc_id
 
   egress {
@@ -73,36 +95,31 @@ resource "aws_security_group" "allow_bastion_ssh_sg" {
     ipv6_cidr_blocks = ["::/0"]
   }
 
-  tags = {
-    Name = "allow_bastion_ssh_${var.name}"
-  }
+  tags = merge(var.tags, {
+    Name = local.security_group_name
+  })
 }
 
 module "ebs_kms_key" {
   source  = "terraform-aws-modules/kms/aws"
-  version = "4.1.0"
+  version = "4.2.0"
 
-  description           = "key to encrypt bastion ebs volumes"
+  description           = "KMS key to encrypt bastion EBS volumes"
   enable_default_policy = true
   key_owners            = [data.aws_iam_session_context.current.issuer_arn]
 
   aliases = ["bastion/${var.name}/ebs"]
 
-  tags = {
+  tags = merge(var.tags, {
     Name = "bastion-${var.name}"
-  }
+  })
 }
 
 resource "tailscale_tailnet_key" "bastion_key" {
   reusable      = true
   ephemeral     = false
   preauthorized = true
-  expiry        = 7776000
+  expiry        = 7776000 # 90 days in seconds
   description   = "bastion-${var.name}"
-  tags = var.tailscale_tags
-  # lifecycle {
-  #   replace_triggered_by = [
-  #     data.aws_ami.amazon2.id
-  #   ]
-  # }
+  tags          = var.tailscale_tags
 }
