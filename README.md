@@ -98,6 +98,8 @@ module "tailscale_connector" {
 4. The connector resolves DNS names and automatically advertises routes for discovered IPs
 5. Traffic for configured domains flows through the connector
 
+**Node lifecycle:** By default, nodes are ephemeral and are automatically removed from the tailnet shortly after they go offline. This prevents stale nodes from accumulating when instances are replaced (e.g., during AMI updates). Set `ephemeral = false` if you need persistent node registrations — note that persistent nodes require manual removal from the Tailscale admin console when instances are replaced.
+
 **Note:** This module requires a public subnet with internet access. The node needs outbound connectivity to reach Tailscale's coordination servers.
 
 ## App Connector ACL Configuration
@@ -194,6 +196,7 @@ After deploying in app-connector mode, configure your Tailscale ACL policy:
 | <a name="input_accept_dns"></a> [accept\_dns](#input\_accept\_dns) | For EC2 instances it is generally best to let Amazon handle the DNS configuration, not have Tailscale override it | `bool` | `false` | no |
 | <a name="input_advertised_routes"></a> [advertised\_routes](#input\_advertised\_routes) | List of advertised routes for the bastion host (required for subnet-router mode) | `list(string)` | `[]` | no |
 | <a name="input_create_security_group"></a> [create\_security\_group](#input\_create\_security\_group) | Whether to create a security group. Set to false and provide security\_group\_id to use an existing one. | `bool` | `true` | no |
+| <a name="input_ephemeral"></a> [ephemeral](#input\_ephemeral) | Register nodes as ephemeral. Ephemeral nodes are automatically removed from the tailnet when they go offline, preventing stale nodes from accumulating after instance replacement. | `bool` | `true` | no |
 | <a name="input_instance_type"></a> [instance\_type](#input\_instance\_type) | EC2 instance type for the Tailscale node. Must be ARM64/Graviton (e.g., t4g, m6g, c6g) since the module uses an arm64 AMI. | `string` | `"t4g.micro"` | no |
 | <a name="input_mode"></a> [mode](#input\_mode) | Tailscale mode: 'subnet-router' or 'app-connector' | `string` | `"subnet-router"` | no |
 | <a name="input_name"></a> [name](#input\_name) | Stack name to use in resource creation | `string` | n/a | yes |
