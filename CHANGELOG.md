@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.0 (2026-02-18)
+
+## What's Changed
+* ci(deps): update terraform terraform-aws-modules/kms/aws to v4 by @renovate[bot] in https://github.com/DoneOps/terraform-aws-tailscale/pull/31
+* ci(deps): update terraform tailscale to v0.22.0 by @renovate[bot] in https://github.com/DoneOps/terraform-aws-tailscale/pull/30
+* ci: migrate release-please from GitHub App to GitHub Actions by @jmymy in https://github.com/DoneOps/terraform-aws-tailscale/pull/35
+* feat: add app-connector mode, update providers, and improve module interface by @jmymy in https://github.com/DoneOps/terraform-aws-tailscale/pull/34
+* feat!: make tailnet auth key ephemeral by default by @jmymy in https://github.com/DoneOps/terraform-aws-tailscale/pull/37
+
+
+**Full Changelog**: https://github.com/DoneOps/terraform-aws-tailscale/compare/v0.1.10...v0.2.0
+
 ## 0.1.10 (2025-03-12)
 
 ## What's Changed
