@@ -48,6 +48,12 @@ variable "accept_dns" {
 
 }
 
+variable "ephemeral" {
+  type        = bool
+  description = "Register nodes as ephemeral. Ephemeral nodes are automatically removed from the tailnet when they go offline, preventing stale nodes from accumulating after instance replacement."
+  default     = true
+}
+
 variable "tailscale_tags" {
   type        = list(string)
   description = "List of tags to apply to the Tailscale node"

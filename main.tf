@@ -117,7 +117,7 @@ module "ebs_kms_key" {
 
 resource "tailscale_tailnet_key" "bastion_key" {
   reusable      = true
-  ephemeral     = false
+  ephemeral     = var.ephemeral
   preauthorized = true
   expiry        = 7776000 # 90 days in seconds
   description   = "bastion-${var.name}"
