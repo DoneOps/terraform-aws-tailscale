@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.1 (2026-08-18)
+
+## What's Changed
+* fix(deps): update googleapis/release-please-action action to v4.4.1 by @renovate[bot] in https://github.com/DoneOps/terraform-aws-tailscale/pull/38
+* fix(deps): update googleapis/release-please-action action to v5 by @renovate[bot] in https://github.com/DoneOps/terraform-aws-tailscale/pull/40
+* fix(deps): update terraform terraform-aws-modules/kms/aws to v4.2.1 by @renovate[bot] in https://github.com/DoneOps/terraform-aws-tailscale/pull/41
+
+
+**Full Changelog**: https://github.com/DoneOps/terraform-aws-tailscale/compare/v0.2.0...v0.2.1
+
 ## 0.2.0 (2026-02-18)
 
 ## What's Changed
